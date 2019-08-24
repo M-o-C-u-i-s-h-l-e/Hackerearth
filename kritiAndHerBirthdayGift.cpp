@@ -46,3 +46,40 @@ int main(void) {
 	for (int i : ans)
 		cout << i << endl;
 }
+
+
+
+
+
+
+
+// Another Solution
+#include <bits/stdc++.h>
+using namespace std;
+#define endl '\n'
+
+int main(void) {
+	ios_base::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
+	
+	int n, q;
+	cin >> n;
+	unordered_map<string, vector<int>> m;
+	string str;
+	for (int i = 0; i < n; i++) {
+		cin >> str;
+		m[str].emplace_back(i + 1);
+	}
+	cin >> q;
+	while (q--) {
+		int l, r, val = 0;
+		cin >> l >> r >> str;
+		if (m.count(str)) {
+			int st = upper_bound(m[str].begin(), m[str].end(), l-1) - m[str].begin();
+			int end = upper_bound(m[str].begin(), m[str].end(), r) - m[str].begin();
+			val = end - st;
+		}
+		cout << val << endl;
+	}
+}
