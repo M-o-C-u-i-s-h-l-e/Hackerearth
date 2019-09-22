@@ -101,11 +101,11 @@ int main(void) {
         int x = 0, y = 0;
         for (int j = 0; j < 2; j++) {
             if (j == 1)
-                x = (x + get(bit0, v[i] - 1) + 1) % mod;
+                x = (get(bit0, v[i] - 1) + 1) % mod;
             else
-                y = (y + get(bit1, MAX - v[i]) + 1) % mod;
-            ans = (ans + ((j == 1) ? x : y)) % mod;
+                y = (get(bit1, MAX - v[i]) + 1) % mod;
         }
+        ans = (ans + x + y) % mod;
         update(bit1, MAX - v[i] + 1, x);
         update(bit0, v[i], y);
     }
