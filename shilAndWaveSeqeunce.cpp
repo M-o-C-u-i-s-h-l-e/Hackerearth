@@ -61,3 +61,51 @@ int main(void) {
 	}
 	cout << ans << endl;
 }
+
+
+
+
+
+// Another Method
+#include <bits/stdc++.h>
+using namespace std;
+#define endl '\n'
+#define MAX 100001
+#define mod 1000000007
+
+void update(vector<int> &bit, int idx, int val) {
+    for (; idx < MAX; idx += (idx & -idx))
+        bit[idx] = (bit[idx] + val) % mod;
+}
+
+int get(vector<int> &bit, int idx) {
+    int res = 0;
+    for (; idx; idx -= (idx & -idx))
+        res = (res + bit[idx]) % mod;
+    return res;
+}
+
+int main(void) {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+    
+    long n, ans = 0;
+    cin >> n;
+    vector<int> v(n), bit0(MAX), bit1(MAX);
+    for (int i = 0; i < n; i++)
+        cin >> v[i];
+    for (int i = 0; i < n; i++) {
+        int x = 0, y = 0;
+        for (int j = 0; j < 2; j++) {
+            if (j == 1)
+                x = (x + get(bit0, v[i] - 1) + 1) % mod;
+            else
+                y = (y + get(bit1, MAX - v[i]) + 1) % mod;
+            ans = (ans + ((j == 1) ? x : y)) % mod;
+        }
+        update(bit1, MAX - v[i] + 1, x);
+        update(bit0, v[i], y);
+    }
+    cout << ans - (n << 1) << endl;
+}
