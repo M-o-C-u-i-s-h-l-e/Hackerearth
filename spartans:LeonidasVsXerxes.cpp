@@ -8,11 +8,12 @@
 using namespace std;
 #define endl '\n'
 #define MAX 100001
-
-vector<long> v(MAX), segTree(4 * MAX);
+ 
+vector<long> v(MAX);
+vector<int> segTree(4 * MAX);
  
 int merge(int l, int m, int r, int pos) {
-    long Count = 0;
+    int Count = 0;
     if (v[m] < v[m+1]) {
         int i = m;
         while (i < r && v[i] < v[i+1])
