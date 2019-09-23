@@ -89,3 +89,99 @@ int main(void) {
         }
     }
 }
+
+
+
+
+
+
+
+// Another Solution
+#include <bits/stdc++.h>
+using namespace std;
+#define endl '\n'
+#define MAX 100001
+ 
+class node {
+public:
+    int ans, l, r, L, R;
+};
+ 
+vector<long> arr(MAX);
+vector<node> segTree(4 * MAX);
+ 
+node calc(node u, node v) {
+    node res;
+    bool mid = arr[u.r] < arr[v.l];
+    res.L = u.L, res.R = v.R;
+    if (u.L == u.r - u.l + 1 && mid)
+        res.L += v.L;
+    if (v.L == v.r - v.l + 1 && mid)
+        res.R += u.R;
+    res.l = u.l, res.r = v.r;
+    res.ans = max({u.ans, v.ans, res.L, res.R});
+    if (mid)
+        res.ans = max(res.ans, u.R + v.L);
+    return res;
+}
+ 
+void build(int pos, int l, int r) {
+    if (l == r) {
+        segTree[pos] = {1, l, r, 1, 1};
+        return;
+    }
+    int m = (l + r) >> 1;
+    build((pos << 1), l, m);
+    build((pos << 1) + 1, m+1, r);
+    segTree[pos] = calc(segTree[(pos << 1)], segTree[(pos << 1) + 1]);
+}
+ 
+void update(int pos, int l, int r, int x) {
+    if (x < l || r < x)
+        return;
+    if (l == r) {
+        segTree[pos] = {1, l, r, 1, 1};
+        return;
+    }
+    int m = (l + r) >> 1;
+    update((pos << 1), l, m, x);
+    update((pos << 1) + 1, m+1, r, x);
+    segTree[pos] = calc(segTree[(pos << 1)], segTree[(pos << 1) + 1]);
+}
+ 
+node query(int pos, int l, int r, int u, int v) {
+    if (u <= l && r <= v)
+        return segTree[pos];
+    int m = (l + r) >> 1;
+    if (m < u)
+        return query((pos << 1) + 1, m+1, r, u, v);
+    if (v < m + 1)
+        return query((pos << 1), l, m, u, v);
+    return calc(query((pos << 1), l, m, u, v), query((pos << 1) + 1, m+1, r, u, v));
+}
+ 
+int main(void) {
+	ios_base::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
+ 
+    int t;
+    cin >> t;
+    while (t--) {
+        long n, q, ty, a, b;
+        cin >> n >> q;
+        for (int i = 1; i <= n; i++)
+            cin >> arr[i];
+        build(1, 1, n);
+        while (q--) {
+            cin >> ty >> a >> b;
+            if (ty == 1) {
+                arr[a] += b;
+                update(1, 1, n, a);
+            } else {
+                node res = query(1, 1, n, a, b);
+                cout << res.ans << endl;
+            }
+        }
+    }
+}
