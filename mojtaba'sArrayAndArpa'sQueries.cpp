@@ -9,7 +9,6 @@ using namespace std;
 #define endl '\n'
 #define MAX 500007
 #define lg 19
-#define ll long long
 
 long n, k, q;
 vector<vector<long>> sp(lg, vector<long>(MAX));
@@ -44,7 +43,7 @@ int main(void) {
 	}
 	for (int l = 1; l < lg; l++)
 	    for (long i = 0; i + (1 << l) <= n; i++)
-	        sp[l][i] = (ll)(sp[l-1][i] * sp[l-1][i + (1 << l - 1)]) % k;
+	        sp[l][i] = (sp[l-1][i] * sp[l-1][i + (1 << l - 1)]) % k;
 	for (int i = 0, l; i < q; i++) {
 	    cin >> l >> R[i];
 	    R[i]--;
@@ -53,12 +52,12 @@ int main(void) {
 	for (int i = n-1; i >= 0; i--) {
 	    long j = i, cur = 1;
 	    for (long l = lg - 1; l >= 0; l--) {
-	        if (j + (1 << l) < n && (ll)(cur * sp[l][j]) % k != 0) {
-	            cur = (ll)(cur * sp[l][j]) % k;
+	        if (j + (1 << l) < n && (cur * sp[l][j]) % k != 0) {
+	            cur = (cur * sp[l][j]) % k;
 	            j += (1 << l);
 	        }
 	    }
-	    if ((ll)(cur * sp[0][j]) % k == 0)
+	    if ((cur * sp[0][j]) % k == 0)
 	        update(j, j - i + 1);
 	    for (int j : v[i])
 	        ans[j] = query(R[j]);
