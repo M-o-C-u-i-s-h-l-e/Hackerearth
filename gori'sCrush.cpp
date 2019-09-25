@@ -15,20 +15,20 @@ int main(void) {
 
     int n, q, k;
     cin >> n >> q >> k;
-    vector<int> v(n + 1), comp(n);
-    for (int i = 1; i <= n; i++) {
+    vector<int> v(n), comp(n);
+    for (int i = 0; i < n; i++) {
         cin >> v[i];
-        comp[i-1] = v[i];
+        comp[i] = v[i];
     }
     sort(comp.begin(), comp.end());
     for (int i = 0, ty, a, b, c, d, pos1, pos2, ans; i < q; i++) {
         cin >> ty >> a >> b;
         if (ty == 0) {
-            pos1 = lower_bound(comp.begin(), comp.end(), v[a]) - comp.begin() + 1;
-            comp.erase(comp.begin() + (pos1 - 1));
-            pos2 = lower_bound(comp.begin(), comp.end(), b) - comp.begin() + 1;
-            comp.insert(comp.begin() + (pos2 - 1), b);
-            v[a] = b;
+            pos1 = lower_bound(comp.begin(), comp.end(), v[a - 1]) - comp.begin();
+            comp.erase(comp.begin() + pos1);
+            pos2 = lower_bound(comp.begin(), comp.end(), b) - comp.begin();
+            comp.insert(comp.begin() + pos2, b);
+            v[a - 1] = b;
         } else {
             cin >> c >> d;
             pos1 = upper_bound(comp.begin(), comp.end(), min(b, d)) - comp.begin();
