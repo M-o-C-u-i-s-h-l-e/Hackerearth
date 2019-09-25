@@ -4,6 +4,8 @@
 //  | |_| |  __/ | | | |  __/
 //   \____|\___|_| |_|_|\___|
 
+// Using Segment Tree
+
 #include <bits/stdc++.h>
 using namespace std;
 #define endl '\n'
@@ -137,6 +139,106 @@ int main(void) {
 				temp.update(stamp[a], stamp[a], -temp.query(stamp[a], stamp[a], 1), 1);
 			}
 			cout << old.query(stamp[a], stamp[a], 1) << endl;
+		}
+	}
+}
+
+
+
+
+
+
+
+// Another Method
+// Using Binary Indexed Tree
+
+#include <bits/stdc++.h>
+using namespace std;
+#define endl '\n'
+#define MAX 100001
+
+long n, q, Time = 0, ty, a, b, ans;
+vector<long> v(MAX);
+vector<int> st(MAX), ed(MAX);
+vector<bool> blocked(MAX, false);
+vector<vector<long>> bit(2, vector<long>(MAX));
+vector<int> adj[MAX];
+
+long query(int pos, int idx) {
+	long res = 0;
+	while (idx) {
+		res += bit[pos][idx];
+		idx -= (idx & -idx);
+	}
+	return res;
+}
+
+void update(int pos, int idx, long val) {
+	while (idx <= MAX) {
+		bit[pos][idx] += val;
+		idx += (idx & -idx);
+	}
+}
+
+void dfs(int cur, int par) {
+	st[cur] = ++Time;
+	for (int i : adj[cur])
+		if (i != par)
+			dfs(i, cur);
+	ed[cur] = Time;
+}
+
+void pointUpdate(int pos, int idx, long val) {
+    update(pos, idx, val);
+    update(pos, idx + 1, -val);
+}
+
+int main(void) {
+	ios_base::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
+	
+	cin >> n;
+	for (int i = 0, x, y; i < n-1; i++) {
+		cin >> x >> y;
+		adj[x].emplace_back(y);
+		adj[y].emplace_back(x);
+	}
+	dfs(1, 1);
+	for (int i = 1; i <= n; i++) {
+		cin >> v[i];
+		update(0, st[i], v[i]);
+	}
+	cin >> q;
+	while (q--) {
+		cin >> ty;
+		if (ty == 1) {
+			cin >> a >> b;
+			update(1, st[a], b);
+			update(1, ed[a] + 1, -b);
+		} else if (ty == 2) {
+			cin >> a >> b;
+			pointUpdate(1, st[a], b);
+		} else if(ty == 3) {
+			cin >> a;
+			if(blocked[a]) {
+				pointUpdate(1, st[a], -query(1, st[a]));
+			} else {
+			    ans = query(1, st[a]);
+				update(0, st[a], ans);
+				pointUpdate(1, st[a], -ans);
+			}
+			blocked[a] = blocked[a] ? false : true;
+		} else {
+			cin >> a;
+			if (blocked[a]) {
+				pointUpdate(1, st[a], -query(1, st[a]));
+			} else {
+			    ans = query(1, st[a]);
+				update(0, st[a], ans);
+				pointUpdate(1, st[a], -ans);
+			}
+			cout << query(0, st[a]) - query(0, st[a] - 1) << endl;
 		}
 	}
 }
