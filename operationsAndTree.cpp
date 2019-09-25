@@ -157,27 +157,21 @@ using namespace std;
 #define endl '\n'
 #define MAX 100001
 
-long n, q, Time = 0, ty, a, b, ans;
-vector<long> v(MAX);
-vector<int> st(MAX), ed(MAX);
+int n, q, Time = 0, ty, st[MAX], ed[MAX];
+long a, b, ans, v[MAX], bit[2][MAX];
 vector<bool> blocked(MAX, false);
-vector<vector<long>> bit(2, vector<long>(MAX));
 vector<int> adj[MAX];
 
 long query(int pos, int idx) {
 	long res = 0;
-	while (idx) {
+	for (; idx; idx -= (idx & -idx))
 		res += bit[pos][idx];
-		idx -= (idx & -idx);
-	}
 	return res;
 }
 
 void update(int pos, int idx, long val) {
-	while (idx <= MAX) {
+    for (; idx <= MAX; idx += (idx & -idx))
 		bit[pos][idx] += val;
-		idx += (idx & -idx);
-	}
 }
 
 void dfs(int cur, int par) {
