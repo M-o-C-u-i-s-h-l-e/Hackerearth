@@ -66,7 +66,7 @@ struct segTree {
 		long mid = (tree[k].l + tree[k].r) >> 1;
 		if (l <= mid)
 			update(l, r, val, k << 1);
-		if (r > mid)
+		if (r > mid && l <= tree[k].r)
 			update(l, r, val, (k << 1) + 1);
 		pushUp(k);
 	}
@@ -79,7 +79,7 @@ struct segTree {
 		long ans = 0;
 		if (l <= mid)
 			ans += query(l, r, k << 1);
-		if (r > mid)
+		if (r > mid && l <= tree[k].r)
 			ans += query(l, r, (k << 1) + 1);
 		return ans;
 	}
