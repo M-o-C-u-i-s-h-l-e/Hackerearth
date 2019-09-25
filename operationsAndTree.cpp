@@ -157,8 +157,8 @@ using namespace std;
 #define endl '\n'
 #define MAX 100001
 
-int n, q, Time = 0, ty, st[MAX], ed[MAX];
-long a, b, ans, v[MAX], bit[2][MAX];
+int n, q, Time = 0, ty, x, st[MAX], ed[MAX];
+long a, b, ans, bit[2][MAX];
 vector<bool> blocked(MAX, false);
 vector<int> adj[MAX];
 
@@ -200,8 +200,8 @@ int main(void) {
 	}
 	dfs(1, 1);
 	for (int i = 1; i <= n; i++) {
-		cin >> v[i];
-		update(0, st[i], v[i]);
+		cin >> x;
+		update(0, st[i], x);
 	}
 	cin >> q;
 	while (q--) {
