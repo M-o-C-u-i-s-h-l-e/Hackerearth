@@ -27,6 +27,7 @@ struct node {
 
 struct segTree {
 	node tree[MAX << 2];
+	
 	void pushUp(long k) {
 		tree[k].sum = tree[k << 1].sum + tree[(k << 1) + 1].sum;
 	}
